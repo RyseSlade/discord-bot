@@ -1,7 +1,7 @@
 # Aedon Discord Bot
 
-[![Generic badge](https://img.shields.io/badge/Version-0.7.0-green)](https://github.com/RyseSlade/discord-bot/releases)
-[![GitHub license](https://img.shields.io/badge/License-MIT-green)](https://github.com/RyseSlade/discord-bot/blob/master/LICENSE)
+[![GitHub release](https://img.shields.io/github/v/release/RyseSlade/test.svg)](https://github.com/RyseSlade/test/releases/)
+[![GitHub license](https://img.shields.io/badge/license-MIT-green)](https://github.com/RyseSlade/discord-bot/blob/master/LICENSE)
 
 A Discord bot implementation written in PHP.
 
