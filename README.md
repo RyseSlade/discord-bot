@@ -1,6 +1,7 @@
 # Aedon Discord Bot
 
 [![GitHub release](https://img.shields.io/github/v/release/RyseSlade/discord-bot.svg)](https://github.com/RyseSlade/discord-bot/releases/)
+[![Build Status](https://travis-ci.org/RyseSlade/discord-bot.svg?branch=master)](https://travis-ci.org/RyseSlade/discord-bot)
 [![GitHub license](https://img.shields.io/badge/license-MIT-green)](https://github.com/RyseSlade/discord-bot/blob/master/LICENSE)
 
 A Discord bot implementation written in PHP.
