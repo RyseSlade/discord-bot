@@ -2,7 +2,7 @@ language: php
 php:
   - 7.4.0
 before_script:
-  composer install --no-interaction
+  - composer install --no-interaction
 script:
-  phpunit --configuration phpunit.xml.dist --coverage-text
-  phpstan analyse -c phpstan.neon
+  - phpunit --configuration phpunit.xml.dist --coverage-text
+  - phpstan analyse -c phpstan.neon
