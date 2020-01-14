@@ -13,7 +13,7 @@ use function is_array;
 use function is_string;
 use function json_decode;
 
-final class BotGateway
+class BotGateway
 {
     private const API_VERSION = 6;
     private const ENCODING = 'json';
