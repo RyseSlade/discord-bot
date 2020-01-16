@@ -4,8 +4,43 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "e788ac38a92378d9108860d885afa4e5",
+    "content-hash": "931189fc9c1fd0df269d25804b3e754a",
     "packages": [
+        {
+            "name": "aedon/php-expectations",
+            "version": "0.9.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/RyseSlade/php-expectations.git",
+                "reference": "8e0ca48e15ed9f5474cf20c3fb6140c0c820aaa4"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/RyseSlade/php-expectations/zipball/8e0ca48e15ed9f5474cf20c3fb6140c0c820aaa4",
+                "reference": "8e0ca48e15ed9f5474cf20c3fb6140c0c820aaa4",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.3"
+            },
+            "require-dev": {
+                "infection/infection": "^0.15.0",
+                "mikey179/vfsstream": "^1.6.8",
+                "phpstan/phpstan": "^0.12",
+                "phpunit/phpunit": "^8.5"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Aedon\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "time": "2020-01-16T07:23:03+00:00"
+        },
         {
             "name": "evenement/evenement",
             "version": "v3.0.1",
