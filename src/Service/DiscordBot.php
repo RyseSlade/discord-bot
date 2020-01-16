@@ -16,13 +16,13 @@ use Aedon\DiscordBot\Message\MessageHandler;
 use Aedon\DiscordBot\Message\MessageHandlerInterface;
 use Aedon\DiscordBot\Rest\RestApi;
 use Aedon\DiscordBot\Rest\RestApiInterface;
+use Aedon\Expect;
 use Exception;
 use Psr\Log\LoggerInterface;
 use Ratchet\Client\Connector;
 use Ratchet\Client\WebSocket;
 use Ratchet\RFC6455\Messaging\MessageInterface;
 use React\EventLoop\LoopInterface;
-use RuntimeException;
 use Throwable;
 
 final class DiscordBot
@@ -97,9 +97,7 @@ final class DiscordBot
             $botGatewayUrl = $this->botGateway->getUrl();
         }
 
-        if (!$botGatewayUrl) {
-            throw new RuntimeException('Could not retrieve the bot gateway url');
-        }
+        Expect::isNotEmpty($botGatewayUrl);
 
         $this->logger->info('Gateway url: ' . $botGatewayUrl);
 

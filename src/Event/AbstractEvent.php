@@ -26,9 +26,9 @@ abstract class AbstractEvent implements EventInterface
 
     /**
      * @param string $key
-     * @return mixed[]
+     * @return mixed
      */
-    public function getData(string $key = null): array
+    public function getData(string $key = null)
     {
         if ($key !== null && isset($this->data[$key])) {
             return $this->data[$key];

@@ -61,7 +61,7 @@ class MySubscriber implements \Aedon\Discordbot\Event\EventSubscriberInterface
 
 // Create the bot
 
-$bot->subscribe(new MySubscriber(), \Aedon\DiscordBot\Event\EventInterface::MESSAGE_CREATE);
+$bot->subscribe(new MySubscriber(), 'MESSAGE_CREATE');
 
 // Run the loop
 ```
@@ -80,7 +80,7 @@ class MySubscriber implements \Aedon\Discordbot\Event\EventSubscriberInterface,
 
     public function process(\Aedon\Discordbot\Event\EventInterface $event): void
     {
-        if ($event->getName() == \Aedon\DiscordBot\Event\EventInterface::MESSAGE_CREATE) {
+        if ($event->getName() == 'MESSAGE_CREATE') {
             $data = $event->getData('d');
 
             if (isset($data['content']) && $data['content'] == '/roll') {

@@ -4,12 +4,11 @@ declare(strict_types=1);
 
 namespace Aedon\DiscordBot\Signal;
 
+use Aedon\Expect;
 use FilesystemIterator;
-use RuntimeException;
 use SplFileInfo;
 use function file_exists;
 use function file_put_contents;
-use function is_writable;
 use function sleep;
 use function time;
 use function unlink;
@@ -25,9 +24,7 @@ final class Signal implements SignalInterface
 
     public function __construct(string $path, int $waitSeconds = self::SIGNAL_WAIT_SECONDS, int $checkIntervalSeconds = self::SIGNAL_CHECK_INTERVAL_SECONDS)
     {
-        if (!is_writable($path)) {
-            throw new RuntimeException('cannot write to signal path ' . $path);
-        }
+        Expect::isWritablePath($path);
 
         $this->path = $path;
         $this->waitSeconds = $waitSeconds;

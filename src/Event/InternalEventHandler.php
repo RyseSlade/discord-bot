@@ -9,12 +9,11 @@ use Aedon\DiscordBot\Command\CommandList;
 use Aedon\DiscordBot\Event\Discord\Hello;
 use Aedon\DiscordBot\Event\Discord\InvalidSession;
 use Aedon\DiscordBot\Event\Discord\Ready;
-use OverflowException;
+use Aedon\Expect;
 use Ratchet\Client\WebSocket;
 use Ratchet\RFC6455\Messaging\Frame;
 use React\EventLoop\LoopInterface;
 use React\EventLoop\TimerInterface;
-use RuntimeException;
 use function array_merge;
 use function assert;
 use function json_encode;
@@ -71,28 +70,21 @@ class InternalEventHandler implements InternalEventHandlerInterface
 
         $commandClass = $this->commandList->getCommand($name);
 
-        if ($commandClass === null) {
-            throw new RuntimeException('Command not found');
-        }
+        Expect::isNotNull($commandClass);
 
+        /** @var CommandInterface $command */
         $command = new $commandClass();
 
-        if (!$command instanceof CommandInterface) {
-            throw new RuntimeException('Invalid command type');
-        }
+        Expect::isInstanceOf($command, CommandInterface::class);
 
+        /** @var string $payload */
         $payload = json_encode([
             'op' => $command->getOpcode(),
             'd' => array_merge($command->jsonSerialize(), $mergeData),
         ]);
 
-        if ($payload === false) {
-            throw new RuntimeException('Could not create json payload');
-        }
-
-        if (mb_strlen($payload) > 4096) {
-            throw new OverflowException('Payload size exceeds limit of 4096 bytes');
-        }
+        Expect::isNotFalse($payload);
+        Expect::isLowerThanOrEqual(mb_strlen($payload), 4096);
 
         $this->webSocket->send(new Frame($payload, true, $command->getOpcode()));
     }

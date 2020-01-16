@@ -6,3 +6,4 @@ before_script:
 script:
   - phpunit --configuration phpunit.xml.dist
   - ./vendor/bin/phpstan.phar analyse -c phpstan.neon
+  - ./vendor/bin/infection

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Aedon\DiscordBot\Rest;
 
-use RuntimeException;
+use Aedon\Expect;
 use function curl_close;
 use function curl_exec;
 use function curl_getinfo;
@@ -61,11 +61,10 @@ class RestApi implements RestApiInterface
             $path = '/' . $path;
         }
 
+        /** @var resource $curl */
         $curl = curl_init(self::DISCORD_API . '/v' . self::API_VERSION . $path);
 
-        if ($curl === false) {
-            throw new RuntimeException('Could not initialize curl request');
-        }
+        Expect::isNotFalse($curl);
 
         $headers = [
             'Authorization: Bot ' . $this->token,
@@ -80,11 +79,10 @@ class RestApi implements RestApiInterface
         curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
 
         if (!empty($data)) {
+            /** @var string $content */
             $content = json_encode($data);
 
-            if ($content === false) {
-                throw new RuntimeException('Could not json encode data array');
-            }
+            Expect::isNotFalse($content);
 
             curl_setopt($curl, CURLOPT_POSTFIELDS, $content);
         }
