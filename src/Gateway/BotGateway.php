@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Aedon\DiscordBot\Gateway;
 
-use RuntimeException;
+use Aedon\Expect;
 use function curl_close;
 use function curl_exec;
 use function curl_init;
@@ -13,7 +13,7 @@ use function is_array;
 use function is_string;
 use function json_decode;
 
-final class BotGateway
+class BotGateway
 {
     private const API_VERSION = 6;
     private const ENCODING = 'json';
@@ -41,11 +41,10 @@ final class BotGateway
 
     public function getUrl(): string
     {
+        /** @var resource $curl */
         $curl = curl_init(self::DISCORD_API . '/gateway/bot');
 
-        if ($curl === false) {
-            throw new RuntimeException('Could not initialize curl request');
-        }
+        Expect::isNotFalse($curl);
 
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($curl, CURLOPT_HTTPHEADER, ['Authorization: Bot ' . $this->token]);

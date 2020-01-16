@@ -1,13 +1,13 @@
 # Aedon Discord Bot
 
 [![GitHub release](https://img.shields.io/github/v/release/RyseSlade/discord-bot.svg)](https://github.com/RyseSlade/discord-bot/releases/)
-[![Build Status](https://travis-ci.org/RyseSlade/discord-bot.svg?branch=php-7.3-compatible)](https://github.com/RyseSlade/discord-bot/tree/php-7.3-compatible)
+[![Build Status](https://travis-ci.org/RyseSlade/discord-bot.svg?branch=master)](https://travis-ci.org/RyseSlade/discord-bot)
 [![GitHub license](https://img.shields.io/badge/license-MIT-green)](https://github.com/RyseSlade/discord-bot/blob/master/LICENSE)
 
-A Discord bot implementation written in PHP.
+A Discord bot implementation written in PHP. Use this library to create your own bot.
 
-* Integrates the Discord websocket API
-* Adds basic support for the Discord REST API
+* Integrates the Discord websocket API (receiving events from Discord)
+* Adds basic support for the Discord REST API (sending commands to Discord)
 
 ### Requirements
 
@@ -35,9 +35,13 @@ require('vendor/autoload.php');
 
 $token = '<insert-your-bot-token>';
 
+$loop = \React\EventLoop\Factory::create();
+
 $bot = new \Aedon\DiscordBot\Service\DiscordBot($token);
 
-$bot->initialize()->run();
+$bot->initialize($loop, new \Ratchet\Client\Connector($loop));
+
+$loop->run();
 ```
 
 Even though your bot won't do much for now it should actually be online and it should receive heartbeat events in the console.
@@ -52,17 +56,19 @@ class MySubscriber implements \Aedon\Discordbot\Event\EventSubscriberInterface
     public function process(\Aedon\Discordbot\Event\EventInterface $event): void
     {
         print_r($event->getData('d'));
-    }
+    } 
 }
 
-$bot->subscribe(new MySubscriber(), \Aedon\DiscordBot\Event\EventInterface::MESSAGE_CREATE);
+// Create the bot
 
-$bot->initialize()->run();
+$bot->subscribe(new MySubscriber(), 'MESSAGE_CREATE');
+
+// Run the loop
 ```
 
 #### Let the bot do something in Discord
 
-The bot library has very basic support for the Discord REST API that is used to e.g. create a message in Discord.
+The bot library has very basic support for the Discord REST API that is used to e.g. create a message in Discord. For more information about the Discord REST API check out the [documentation](https://discordapp.com/developers/docs/intro).
 
 Add the RestApiSubscriberInterface to your subscriber and it will get access to the rest api object.
 
@@ -74,7 +80,7 @@ class MySubscriber implements \Aedon\Discordbot\Event\EventSubscriberInterface,
 
     public function process(\Aedon\Discordbot\Event\EventInterface $event): void
     {
-        if ($event->getName() == \Aedon\DiscordBot\Event\EventInterface::MESSAGE_CREATE) {
+        if ($event->getName() == 'MESSAGE_CREATE') {
             $data = $event->getData('d');
 
             if (isset($data['content']) && $data['content'] == '/roll') {
@@ -103,7 +109,19 @@ The bot will listen for MESSAGE_CREATE events and when someone writes "/roll" it
 Probably not the best way to do it but you can create a cron job and run the PHP script like every 5 minutes. There is a basic locking mechanism available that you can use to prevent running multiple bot processes at the same time.
 
 ```php
-$bot->setSignal(new \Aedon\DiscordBot\Signal\Signal('<path to an empty writable directory>'));
+$signal = new \Aedon\DiscordBot\Signal\Signal('<empty writable directory>');
+
+if (!$signal->create()) {
+    echo 'Discord Bot already running. Exiting.';
+    exit;
+}
+
+// Create loop and do some stuff...
+
+// Add a periodic check to the loop
+$loop->addPeriodicTimer($signal->getCheckIntervalSeconds(), function(\React\EventLoop\TimerInterface $timer) use ($signal) {
+    $signal->check();
+});
 ```
 
 ### Support

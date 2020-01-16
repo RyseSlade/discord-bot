@@ -6,7 +6,6 @@ namespace Aedon\DiscordBot\Test\Message;
 
 use Aedon\DiscordBot\Event\Discord\GenericEvent;
 use Aedon\DiscordBot\Event\Discord\Hello;
-use Aedon\DiscordBot\Event\EventInterface;
 use Aedon\DiscordBot\Message\MessageHandler;
 use PHPUnit\Framework\TestCase;
 use Ratchet\RFC6455\Messaging\MessageInterface;
@@ -47,7 +46,7 @@ class MessageHandlerTest extends TestCase
         $data = [
             'op' => 0,
             's' => 123,
-            't' => EventInterface::MESSAGE_CREATE,
+            't' => 'MESSAGE_CREATE',
             'd' => [
                 'id' => '11111',
                 'author' => [],
@@ -63,7 +62,7 @@ class MessageHandlerTest extends TestCase
 
         self::assertInstanceOf(GenericEvent::class, $result);
         self::assertEquals(123, $result->getSequenceNumber());
-        self::assertEquals(EventInterface::MESSAGE_CREATE, $result->getName());
+        self::assertEquals('MESSAGE_CREATE', $result->getName());
         self::assertEquals($data, $result->getData());
     }
 }

@@ -16,16 +16,13 @@ use Aedon\DiscordBot\Message\MessageHandler;
 use Aedon\DiscordBot\Message\MessageHandlerInterface;
 use Aedon\DiscordBot\Rest\RestApi;
 use Aedon\DiscordBot\Rest\RestApiInterface;
-use Aedon\DiscordBot\Signal\SignalInterface;
+use Aedon\Expect;
 use Exception;
 use Psr\Log\LoggerInterface;
 use Ratchet\Client\Connector;
 use Ratchet\Client\WebSocket;
 use Ratchet\RFC6455\Messaging\MessageInterface;
-use React\EventLoop\Factory;
 use React\EventLoop\LoopInterface;
-use React\EventLoop\TimerInterface;
-use RuntimeException;
 use Throwable;
 
 final class DiscordBot
@@ -51,9 +48,6 @@ final class DiscordBot
     /** @var string  */
     private $botGateWayUrl = '';
 
-    /** @var SignalInterface|null  */
-    private $signal = null;
-
     /** @var EventSubscriberInterface[][] */
     private $eventSubscribers = [
         EventInterface::ALL => [],
@@ -73,7 +67,6 @@ final class DiscordBot
         $this->messageHandler = $messageHandler ?? new MessageHandler();
         $this->botGateway = $botGateway ?? new BotGateway($token);
         $this->internalEventHandler = $internalEventHandler ?? new InternalEventHandler($token, $commandList ?? new CommandList());
-
         $this->logger = new ConsoleLogger();
     }
 
@@ -91,13 +84,6 @@ final class DiscordBot
         return $this;
     }
 
-    public function setSignal(?SignalInterface $signal): self
-    {
-        $this->signal = $signal;
-
-        return $this;
-    }
-
     public function subscribe(EventSubscriberInterface $subscriber, string $event = EventInterface::ALL): self
     {
         if (!isset($this->eventSubscribers[$event])) {
@@ -109,22 +95,14 @@ final class DiscordBot
         return $this;
     }
 
-    public function initialize(): LoopInterface
+    public function initialize(LoopInterface $loop, Connector $connector): void
     {
         $this->logger->info('Initializing Discord bot...');
-
-        if ($this->signal instanceof SignalInterface) {
-            $this->logger->info('Waiting for clearing signal...');
-
-            if (!$this->signal->create()) {
-                $this->logger->notice('Discord Bot already running. Exiting.');
-                exit;
-            }
-        }
 
         $botGatewayUrl = '';
 
         if (!empty($this->botGateWayUrl)) {
+            $this->logger->info('Using supplied gateway url');
             $botGatewayUrl = $this->botGateWayUrl;
         } else if ($this->botGateway instanceof BotGateway) {
             $this->logger->info('Requesting gateway url...');
@@ -132,23 +110,9 @@ final class DiscordBot
             $botGatewayUrl = $this->botGateway->getUrl();
         }
 
-        if (!$botGatewayUrl) {
-            throw new RuntimeException('Could not retrieve the bot gateway url');
-        }
+        Expect::isNotEmpty($botGatewayUrl);
 
         $this->logger->info('Gateway url: ' . $botGatewayUrl);
-
-        $loop = Factory::create();
-
-        $connector = new Connector($loop);
-
-        if ($this->signal instanceof SignalInterface) {
-            $loop->addPeriodicTimer($this->signal->getCheckIntervalSeconds(), function(TimerInterface $timer) {
-                $this->logger->info('Running periodic signal check (' . (string)$timer->getInterval() . ')');
-                assert($this->signal instanceof SignalInterface);
-                $this->signal->check();
-            });
-        }
 
         $connector($botGatewayUrl)->then(
             function(WebSocket $webSocket) use ($loop) {
@@ -211,7 +175,5 @@ final class DiscordBot
                 $loop->stop();
             }
         );
-
-        return $loop;
     }
 }

@@ -11,8 +11,8 @@ use Aedon\DiscordBot\Event\Discord\InvalidSession;
 use Aedon\DiscordBot\Event\Discord\Ready;
 use Aedon\DiscordBot\Event\Discord\Reconnect;
 use Aedon\DiscordBot\Event\EventInterface;
+use Aedon\Expect;
 use Ratchet\RFC6455\Messaging\MessageInterface;
-use RuntimeException;
 use function json_decode;
 
 final class MessageHandler implements MessageHandlerInterface
@@ -48,11 +48,10 @@ final class MessageHandler implements MessageHandlerInterface
         $key = $opcode !== 0 ? $opcode : (string)$data['t'];
 
         if (isset($this->messageEvents[$key])) {
+            /** @var EventInterface $event */
             $event = new $this->messageEvents[$key]($data);
 
-            if (!$event instanceof EventInterface) {
-                throw new RuntimeException('Invalid event object');
-            }
+            Expect::isInstanceOf($event, EventInterface::class);
 
             return $event;
         } else if ($opcode === 0 && isset($data['t']) && is_string($data['t'])) {
