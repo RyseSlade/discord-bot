@@ -21,7 +21,7 @@ class RestApi implements RestApiInterface
     public const DISCORD_API = 'https://discordapp.com/api';
     public const API_VERSION = 6;
     private const BOT_URL = 'https://github.com/RyseSlade/discord-bot';
-    private const BOT_VERSION = '0.7.0';
+    private const BOT_VERSION = '1.0';
 
     private string $token;
 

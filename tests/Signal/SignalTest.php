@@ -42,16 +42,18 @@ class SignalTest extends TestCase
     public function testShouldRemoveSignalFile(): void
     {
         $filename1 = (string)time();
-        $filename2 = (string)time() + 1;
+        $filename2 = (string)(time() + 1);
 
         $vfs = vfsStream::setup('var', null, [
-            'signal' => [
-                $filename1 => '',
-                $filename2 => '',
-            ],
+            'signal' => [],
         ]);
 
         $subject = new Signal($vfs->getChild('signal')->url(), 1);
+
+        $subject->check();
+
+        vfsStream::newFile($filename1)->withContent('')->at($vfs->getChild('signal'));
+        vfsStream::newFile($filename2)->withContent('')->at($vfs->getChild('signal'));
 
         $subject->check();
 

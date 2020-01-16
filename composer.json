@@ -29,6 +29,7 @@
     },
     "scripts": {
         "analyse": "phpstan analyse -c phpstan.neon",
-        "test": "phpdbg -qrr ./vendor/bin/phpunit --testdox"
+        "test": "phpdbg -qrr ./vendor/bin/phpunit --testdox",
+        "testc": "./vendor/bin/phpunit --testdox --coverage-text"
     }
 }

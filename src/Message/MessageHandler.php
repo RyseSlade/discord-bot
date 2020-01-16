@@ -54,7 +54,7 @@ final class MessageHandler implements MessageHandlerInterface
             Expect::isInstanceOf($event, EventInterface::class);
 
             return $event;
-        } else if ($opcode === 0 && isset($data['t']) && is_string($data['t'])) {
+        } else if ($opcode === 0 && isset($data['t']) && is_string($data['t']) && !empty($data['t'])) {
             return new GenericEvent($data);
         }
 
