@@ -126,6 +126,6 @@ $loop->addPeriodicTimer($signal->getCheckIntervalSeconds(), function(\React\Even
 
 ### Support
 
-Join Discord: https://discord.gg/xhk7dN
+Join Discord: https://discord.gg/NEfRerY
 
 Aedon Discord Bot created by Michael "Striker" Berger
