@@ -83,8 +83,10 @@ class InternalEventHandler implements InternalEventHandlerInterface
             'd' => array_merge($command->jsonSerialize(), $mergeData),
         ]);
 
+        $payloadLength = mb_strlen($payload);
+
         Expect::isNotFalse($payload);
-        Expect::isLowerThanOrEqual(mb_strlen($payload), 4096);
+        Expect::isLowerThanOrEqual($payloadLength, 4096);
 
         $this->webSocket->send(new Frame($payload, true, $command->getOpcode()));
     }
