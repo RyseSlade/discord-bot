@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Aedon\DiscordBot\Test\Event\Discord;
+namespace Aedon\DiscordBotTest\Event\Discord;
 
 use Aedon\DiscordBot\Event\Discord\Hello;
 use Aedon\DiscordBot\Event\EventInterface;

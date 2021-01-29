@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Aedon\DiscordBot\Test\Rest;
+namespace Aedon\DiscordBotTest\Rest;
 
 use Aedon\DiscordBot\Rest\RestApiResponse;
 use PHPUnit\Framework\TestCase;

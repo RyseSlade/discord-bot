@@ -2,12 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Aedon\DiscordBot\Test\Service;
+namespace Aedon\DiscordBotTest\Service;
 
 use Aedon\DiscordBot\Gateway\BotGateway;
 use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Log\LoggerInterface;
 use Ratchet\Client\Connector;
 use React\EventLoop\LoopInterface;
@@ -63,6 +64,8 @@ class NullLogger implements LoggerInterface
 
 class DiscordBot extends TestCase
 {
+    use ProphecyTrait;
+
     public function testShouldCallConnector(): void
     {
         $subject = new \Aedon\DiscordBot\Service\DiscordBot('token');

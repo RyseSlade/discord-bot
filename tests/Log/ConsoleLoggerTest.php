@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Aedon\DiscordBot\Test\Log;
+namespace Aedon\DiscordBotTest\Log;
 
 use Aedon\DiscordBot\Log\ConsoleLogger;
 use PHPUnit\Framework\TestCase;

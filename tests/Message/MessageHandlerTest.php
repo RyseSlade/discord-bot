@@ -2,13 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Aedon\DiscordBot\Test\Message;
+namespace Aedon\DiscordBotTest\Message;
 
 use Aedon\DiscordBot\Event\AbstractSubscribableEvent;
 use Aedon\DiscordBot\Event\Discord\GenericEvent;
 use Aedon\DiscordBot\Event\Discord\Hello;
 use Aedon\DiscordBot\Message\MessageHandler;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Ratchet\RFC6455\Messaging\MessageInterface;
 use function json_encode;
 
@@ -19,6 +20,8 @@ class MessageHandlerTestEvent extends AbstractSubscribableEvent
 
 class MessageHandlerTest extends TestCase
 {
+    use ProphecyTrait;
+
     public function testShouldConvertToHelloEvent(): void
     {
         $subject = new MessageHandler();

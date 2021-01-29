@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Aedon\DiscordBot\Test\Signal;
+namespace Aedon\DiscordBotTest\Signal;
 
 use Aedon\DiscordBot\Signal\Signal;
 use org\bovigo\vfs\vfsStream;

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Aedon\DiscordBot\Test\Command;
+namespace Aedon\DiscordBotTest\Command;
 
 use Aedon\DiscordBot\Command\CommandInterface;
 use Aedon\DiscordBot\Command\HeartbeatCommand;

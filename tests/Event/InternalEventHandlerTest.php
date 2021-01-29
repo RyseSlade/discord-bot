@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Aedon\DiscordBot\Test\Event;
+namespace Aedon\DiscordBotTest\Event;
 
 use Aedon\DiscordBot\Command\CommandList;
 use Aedon\DiscordBot\Command\IdentifyCommand;
@@ -13,12 +13,15 @@ use Aedon\DiscordBot\Event\Discord\Reconnect;
 use Aedon\DiscordBot\Event\InternalEventHandler;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Ratchet\Client\WebSocket;
 use React\EventLoop\LoopInterface;
 use function json_encode;
 
 class InternalEventHandlerTest extends TestCase
 {
+    use ProphecyTrait;
+
     public function testShouldIdentifyAndStartHeartbeatOnHelloEvent(): void
     {
         $subject = new InternalEventHandler('token', new CommandList());
