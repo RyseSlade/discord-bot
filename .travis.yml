@@ -1,9 +1,8 @@
 language: php
 php:
-  - 7.4.0
+  - 7.4.9
 before_script:
   - composer install --no-interaction
 script:
   - phpunit --configuration phpunit.xml.dist
   - ./vendor/bin/phpstan.phar analyse -c phpstan.neon
-  - ./vendor/bin/infection

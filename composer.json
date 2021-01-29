@@ -3,7 +3,7 @@
     "description": "A PHP bot implementation for Discord.",
     "license": "MIT",
     "require": {
-        "php": ">=7.4.0",
+        "php": ">=7.4.0|^8.0",
         "ext-curl": "*",
         "ext-json": "*",
         "ext-mbstring": "*",
@@ -15,8 +15,7 @@
         "phpunit/phpunit": "^9.5",
         "phpspec/prophecy-phpunit": "^2.0.1",
         "phpstan/phpstan": "^0.12",
-        "mikey179/vfsstream": "^1.6.8",
-        "infection/infection":"^0.15.0"
+        "mikey179/vfsstream": "^1.6.8"
     },
     "autoload": {
         "psr-4": {
