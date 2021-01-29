@@ -11,7 +11,7 @@ A Discord bot implementation written in PHP. Use this library to create your own
 
 ### Requirements
 
-PHP 7.4
+PHP 7.4+ or PHP 8.0+
 
 Required extensions:
 * ext-curl
