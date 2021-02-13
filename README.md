@@ -18,8 +18,6 @@ Required extensions:
 * ext-json
 * ext-mbstring
 
-There is also a backport for PHP 7.3 available.
-
 ### Getting your bot up and running
 
 You have created a Discord bot and it's now in your server but _offline_ all day... Let's start!
@@ -101,28 +99,6 @@ class MySubscriber implements \Aedon\Discordbot\Event\EventSubscriberInterface,
 ```
 
 The bot will listen for MESSAGE_CREATE events and when someone writes "/roll" it will answer back to the user with "Roll Result (1-6): X".
-
-### FAQ
-
-#### How do you execute the bot script?
-
-Probably not the best way to do it but you can create a cron job and run the PHP script like every 5 minutes. There is a basic locking mechanism available that you can use to prevent running multiple bot processes at the same time.
-
-```php
-$signal = new \Aedon\DiscordBot\Signal\Signal('<empty writable directory>');
-
-if (!$signal->create()) {
-    echo 'Discord Bot already running. Exiting.';
-    exit;
-}
-
-// Create loop and do some stuff...
-
-// Add a periodic check to the loop
-$loop->addPeriodicTimer($signal->getCheckIntervalSeconds(), function(\React\EventLoop\TimerInterface $timer) use ($signal) {
-    $signal->check();
-});
-```
 
 ### Support
 
