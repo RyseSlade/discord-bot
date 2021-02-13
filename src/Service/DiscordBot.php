@@ -135,7 +135,7 @@ final class DiscordBot
                                 $this->internalEventHandler->updateSequenceNumber($event->getSequenceNumber());
                             }
                         } else {
-                            $this->logger->debug('Unhandled message received: ' . (string)$message);
+                            $this->logger->info('Unhandled message received: ' . $message->getPayload());
                         }
                     } catch (Throwable $throwable) {
                         $this->logger->error($throwable->getMessage());
