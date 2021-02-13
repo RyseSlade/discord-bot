@@ -37,26 +37,14 @@ class InternalEventHandler implements InternalEventHandlerInterface
         $this->commandList = $commandList;
     }
 
-    public function setWebSocket(WebSocket $webSocket): self
+    public function setWebSocket(WebSocket $webSocket): void
     {
-        if ($this->webSocket instanceof WebSocket) {
-            return $this;
-        }
-
         $this->webSocket = $webSocket;
-
-        return $this;
     }
 
-    public function setLoop(LoopInterface $loop): self
+    public function setLoop(LoopInterface $loop): void
     {
-        if ($this->loop instanceof LoopInterface) {
-            return $this;
-        }
-
         $this->loop = $loop;
-
-        return $this;
     }
 
     public function updateSequenceNumber(int $sequenceNumber): void
@@ -97,7 +85,13 @@ class InternalEventHandler implements InternalEventHandlerInterface
             case EventInterface::HELLO:
                 assert($event instanceof Hello);
 
-                $this->identify();
+                if ($this->sessionId) {
+                    $this->resume();
+                    $this->isHeartbeatStarted = false;
+                } else {
+                    $this->identify();
+                }
+
                 $this->startHeartbeat($event->getHeartbeatInterval());
 
                 break;
@@ -154,28 +148,33 @@ class InternalEventHandler implements InternalEventHandlerInterface
         $this->sendCommand(CommandInterface::IDENTIFY, ['token' => $this->token]);
     }
 
+    private function resume(): void
+    {
+        $this->sendCommand(CommandInterface::RESUME, [
+            'token' => $this->token,
+            'session_id' => $this->sessionId,
+            'seq' => $this->sequenceNumber,
+        ]);
+    }
+
     private function invalidateSession(InvalidSession $event): void
     {
-        assert($this->webSocket instanceof WebSocket);
-        assert($this->loop instanceof LoopInterface);
-
         if (!$event->canResume()) {
             $this->shutdown();
         } else {
-            $this->sendCommand(CommandInterface::RESUME, [
-                'token' => $this->token,
-                'session_id' => $this->sessionId,
-                'seq' => $this->sequenceNumber,
-            ]);
+            $this->resume();
         }
     }
 
     private function shutdown(): void
     {
         assert($this->webSocket instanceof WebSocket);
-        assert($this->loop instanceof LoopInterface);
 
         $this->webSocket->close();
-        $this->loop->stop();
+
+        $this->sequenceNumber = null;
+        $this->sessionId = '';
+        $this->isHeartbeatStarted = false;
+        $this->heartbeatACKReceived = false;
     }
 }
