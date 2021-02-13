@@ -159,11 +159,7 @@ class InternalEventHandler implements InternalEventHandlerInterface
 
     private function invalidateSession(InvalidSession $event): void
     {
-        if (!$event->canResume()) {
-            $this->shutdown();
-        } else {
-            $this->resume();
-        }
+        $this->shutdown();
     }
 
     private function shutdown(): void
