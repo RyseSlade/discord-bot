@@ -34,7 +34,7 @@ interface EventInterface
     /**
      * Return the data array
      *
-     * @param string $key
+     * @param string|null $key
      * @return mixed
      */
     public function getData(string $key = null);
