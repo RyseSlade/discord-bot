@@ -25,7 +25,7 @@ abstract class AbstractEvent implements EventInterface
     }
 
     /**
-     * @param string $key
+     * @param string|null $key
      * @return mixed
      */
     public function getData(string $key = null)
