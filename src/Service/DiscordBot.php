@@ -57,18 +57,14 @@ final class DiscordBot
         $this->logger = new ConsoleLogger();
     }
 
-    public function setLogger(LoggerInterface $logger): self
+    public function setLogger(LoggerInterface $logger): void
     {
         $this->logger = $logger;
-
-        return $this;
     }
 
-    public function setBotGatewayUrl(string $botGatewayUrl): self
+    public function setBotGatewayUrl(string $botGatewayUrl): void
     {
         $this->botGateWayUrl = $botGatewayUrl;
-
-        return $this;
     }
 
     public function subscribe(EventSubscriberInterface $subscriber, string $event = EventInterface::ALL): self
@@ -93,8 +89,8 @@ final class DiscordBot
             $botGatewayUrl = $this->botGateWayUrl;
         } else if ($this->botGateway instanceof BotGateway) {
             $this->logger->info('Requesting gateway url...');
-
             $botGatewayUrl = $this->botGateway->getUrl();
+            $this->botGateWayUrl = $botGatewayUrl;
         }
 
         Expect::isNotEmpty($botGatewayUrl);
@@ -105,13 +101,13 @@ final class DiscordBot
             function(WebSocket $webSocket) use ($loop) {
                 $webSocket->on('message', function(MessageInterface $message) use ($webSocket, $loop) {
                     try {
-                        $this->internalEventHandler->setWebSocket($webSocket)
-                            ->setLoop($loop);
+                        $this->internalEventHandler->setWebSocket($webSocket);
+                        $this->internalEventHandler->setLoop($loop);
 
                         $event = $this->messageHandler->convertToEvent($message);
 
                         if ($event instanceof EventInterface) {
-                            $this->logger->info('Created event ' . $event->getName());
+                            $this->logger->info('Received event ' . $event->getName() . ' (' . $event->getSequenceNumber() . ')');
 
                             if ($event->isInternal()) {
                                 $this->internalEventHandler->process($event);
@@ -139,7 +135,7 @@ final class DiscordBot
                                 $this->internalEventHandler->updateSequenceNumber($event->getSequenceNumber());
                             }
                         } else {
-                            $this->logger->debug((string)$message);
+                            $this->logger->debug('Unhandled message received: ' . (string)$message);
                         }
                     } catch (Throwable $throwable) {
                         $this->logger->error($throwable->getMessage());
@@ -149,10 +145,9 @@ final class DiscordBot
                     }
                 });
 
-                $webSocket->on('close', function($code = null, $reason = null) use ($webSocket, $loop) {
+                $webSocket->on('close', function($code = null, $reason = null) use ($loop) {
                     $this->logger->info('Connection closed (' . $code . ')');
 
-                    $webSocket->close();
                     $loop->stop();
                 });
             },
