@@ -12,7 +12,7 @@ final class RestApiResponse
     private ?array $data;
 
     /**
-     * @param int $httpCode
+     * @param int|null $httpCode
      * @param mixed[]|null $data
      */
     public function __construct(?int $httpCode, ?array $data)
