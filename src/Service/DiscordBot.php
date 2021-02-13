@@ -107,7 +107,7 @@ final class DiscordBot
                         $event = $this->messageHandler->convertToEvent($message);
 
                         if ($event instanceof EventInterface) {
-                            $this->logger->info('Received event ' . $event->getName() . ' (' . $event->getSequenceNumber() . ')');
+                            $this->logger->info('Received event ' . $event->getName() . ($event->getSequenceNumber() ? ' (' . $event->getSequenceNumber() . ')' : ''));
 
                             if ($event->isInternal()) {
                                 $this->internalEventHandler->process($event);
