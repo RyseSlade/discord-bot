@@ -29,9 +29,10 @@ class InternalEventHandlerTest extends TestCase
         $loop = $this->prophesize(LoopInterface::class);
         $webSocket = $this->prophesize(WebSocket::class);
 
-        $subject->setLoop($loop->reveal())
-            ->setWebSocket($webSocket->reveal())
-            ->process(new Hello([
+        $subject->setLoop($loop->reveal());
+        $subject->setWebSocket($webSocket->reveal());
+
+        $subject->process(new Hello([
                 'd' => [
                     'heartbeat_interval' => 45000,
                 ],
@@ -55,14 +56,14 @@ class InternalEventHandlerTest extends TestCase
         $loop = $this->prophesize(LoopInterface::class);
         $webSocket = $this->prophesize(WebSocket::class);
 
-        $subject->setLoop($loop->reveal())
-            ->setWebSocket($webSocket->reveal())
-            ->process(new InvalidSession([
+        $subject->setLoop($loop->reveal());
+        $subject->setWebSocket($webSocket->reveal());
+
+        $subject->process(new InvalidSession([
                 'd' => false,
             ]));
 
         $webSocket->close()->shouldHaveBeenCalled();
-        $loop->stop()->shouldHaveBeenCalled();
     }
 
     public function testShouldResumeOnInvalidSessionEvent(): void
@@ -72,9 +73,10 @@ class InternalEventHandlerTest extends TestCase
         $loop = $this->prophesize(LoopInterface::class);
         $webSocket = $this->prophesize(WebSocket::class);
 
-        $subject->setLoop($loop->reveal())
-            ->setWebSocket($webSocket->reveal())
-            ->process(new InvalidSession([
+        $subject->setLoop($loop->reveal());
+        $subject->setWebSocket($webSocket->reveal());
+
+        $subject->process(new InvalidSession([
                 'd' => true,
             ]));
 
@@ -94,11 +96,11 @@ class InternalEventHandlerTest extends TestCase
         $loop = $this->prophesize(LoopInterface::class);
         $webSocket = $this->prophesize(WebSocket::class);
 
-        $subject->setLoop($loop->reveal())
-            ->setWebSocket($webSocket->reveal())
-            ->process(new Reconnect([]));
+        $subject->setLoop($loop->reveal());
+        $subject->setWebSocket($webSocket->reveal());
+
+        $subject->process(new Reconnect([]));
 
         $webSocket->close()->shouldHaveBeenCalled();
-        $loop->stop()->shouldHaveBeenCalled();
     }
 }
