@@ -109,13 +109,6 @@ class SimpleBot
                             $this->logger->info('READY received');
 
                             $this->sessionId = (string)$data['d']['session_id'];
-                        } else if (isset($data['t']) && $data['t'] == 'MESSAGE_CREATE') {
-                            $this->logger->info('MESSAGE_CREATE received');
-
-                            if (isset($data['d']['content']) && strpos($data['d']['content'], 'shutdown') !== false) {
-                                $webSocket->close(5000);
-                                $loop->stop();
-                            }
                         } else {
                             $this->logger->info('Unspecified event ' . $data['t'] . ' received');
                         }
@@ -139,7 +132,8 @@ class SimpleBot
     {
         $loop->addPeriodicTimer($heartbeatInterval, function(TimerInterface $timer) use ($webSocket) {
             if (!$this->heartbeatACKReceived) {
-                $webSocket->close(2000);
+                $this->logger->info('No heartbeat received. Disconnecting...');
+                $webSocket->close(6000);
             } else {
                 $this->send($webSocket, 1, 'HEARTBEAT', [
                     'op' => 1,
