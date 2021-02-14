@@ -8,6 +8,12 @@ A Discord bot implementation written in PHP. Use this library to create your own
 
 * Integrates the Discord websocket API (receiving events from Discord)
 * Adds basic support for the Discord REST API (sending commands to Discord)
+* Supports API v6
+
+Missing features
+
+* Does not resume lost connections
+* No support for voice channels
 
 ### Requirements
 
