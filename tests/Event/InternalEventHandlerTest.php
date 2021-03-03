@@ -66,29 +66,6 @@ class InternalEventHandlerTest extends TestCase
         $webSocket->close()->shouldHaveBeenCalled();
     }
 
-    public function testShouldResumeOnInvalidSessionEvent(): void
-    {
-        $subject = new InternalEventHandler('token', new CommandList());
-
-        $loop = $this->prophesize(LoopInterface::class);
-        $webSocket = $this->prophesize(WebSocket::class);
-
-        $subject->setLoop($loop->reveal());
-        $subject->setWebSocket($webSocket->reveal());
-
-        $subject->process(new InvalidSession([
-                'd' => true,
-            ]));
-
-        $data = (new ResumeCommand())->jsonSerialize();
-        $data['token'] = 'token';
-
-        $webSocket->send(json_encode([
-            'op' => 6,
-            'd' => $data,
-        ]))->shouldHaveBeenCalledOnce();
-    }
-
     public function testShouldShutdownOnReconnectEvent(): void
     {
         $subject = new InternalEventHandler('token', new CommandList());
